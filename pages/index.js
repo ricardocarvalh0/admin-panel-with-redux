@@ -1,23 +1,27 @@
-import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
-import Link from 'next/link'
-import { startClock } from '../actions'
-import Examples from '../components/examples'
+import {useEffect} from 'react'
+import {useDispatch, useSelector} from 'react-redux'
+import {loadUsers} from '../actions'
+import UsersTable from "../components/users-table";
+import AddUserBtn from "../components/add-user-btn";
+import {Grid} from "@mui/material";
 
 const Index = () => {
-  const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(startClock())
-  }, [dispatch])
+    const users = useSelector(({users}) => {
+        return users.list
+    })
+    const dispatch = useDispatch()
+    useEffect(() => {
+        if (!users.length) {
+            dispatch(loadUsers())
+        }
+    }, [dispatch, users])
 
-  return (
-    <>
-      <Examples />
-      <Link href="/show-redux-state">
-        <a>Click to see current Redux State</a>
-      </Link>
-    </>
-  )
+    return (
+        <Grid container direction="row" justifyContent="flex-end">
+            <AddUserBtn/>
+            <UsersTable/>
+        </Grid>
+    )
 }
 
 export default Index

@@ -1,33 +1,83 @@
 import { combineReducers } from 'redux'
 import * as types from './types'
 
-// COUNTER REDUCER
-const counterReducer = (state = 0, { type }) => {
-  switch (type) {
-    case types.INCREMENT:
-      return state + 1
-    case types.DECREMENT:
-      return state - 1
-    case types.RESET:
-      return 0
-    default:
-      return state
-  }
-}
-
-// INITIAL TIMER STATE
-const initialTimerState = {
-  lastUpdate: 0,
-  light: false,
+const initialUserState = {
+  loading: false,
+  error: '',
+  list: []
 }
 
 // TIMER REDUCER
-const timerReducer = (state = initialTimerState, { type, payload }) => {
+const userReducer = (state = initialUserState, { type, payload }) => {
   switch (type) {
-    case types.TICK:
+    case types.LOAD_USERS_STARTED:
       return {
-        lastUpdate: payload.ts,
-        light: !!payload.light,
+        ...state,
+        loading: true,
+        error: ''
+      }
+    case types.LOAD_USERS_SUCCESS:
+      return {
+        list: payload,
+        loading: false,
+        error: ''
+      }
+    case types.LOAD_USERS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: payload
+      }
+    case types.CREATE_USER_STARTED:
+      return {
+        ...state,
+        loading: true,
+        error: ''
+      }
+    case types.CREATE_USER_SUCCESS:
+      return {
+        list: [...state.list, payload],
+        loading: false,
+        error: ''
+      }
+    case types.CREATE_USER_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: payload
+      }
+    case types.DELETE_USER_STARTED:
+      return {
+        ...state,
+        loading: true,
+        error: ''
+      }
+    case types.DELETE_USER_SUCCESS:
+      return {
+        list: state.list.filter(u => u.id !== payload),
+        loading: false,
+        error: ''
+      }
+    case types.UPDATE_USER_STARTED:
+      return {
+        ...state,
+        loading: true,
+        error: ''
+      }
+    case types.UPDATE_USER_SUCCESS:
+      return {
+        list: state.list.map(u => {
+          if (u.id !== payload.id) {
+            return u;
+          }
+
+          return {
+            ...u,
+            ...payload
+          }
+        }),
+        loading: false,
+        error: ''
       }
     default:
       return state
@@ -36,8 +86,7 @@ const timerReducer = (state = initialTimerState, { type, payload }) => {
 
 // COMBINED REDUCERS
 const reducers = {
-  counter: counterReducer,
-  timer: timerReducer,
+  users: userReducer
 }
 
 export default combineReducers(reducers)

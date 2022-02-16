@@ -1,23 +1,44 @@
 import * as types from './types'
-
-// INITIALIZES CLOCK ON SERVER
-export const serverRenderClock = () => (dispatch) =>
-  dispatch({
-    type: types.TICK,
-    payload: { light: false, ts: Date.now() },
-  })
+import axios from "axios";
 
 // INITIALIZES CLOCK ON CLIENT
-export const startClock = () => (dispatch) =>
-  setInterval(() => {
-    dispatch({ type: types.TICK, payload: { light: true, ts: Date.now() } })
-  }, 1000)
+export const loadUsers = () => (dispatch) => {
+    dispatch({ type: types.LOAD_USERS_STARTED });
 
-// INCREMENT COUNTER BY 1
-export const incrementCount = () => ({ type: types.INCREMENT })
+    axios
+        .get('https://my-json-server.typicode.com/karolkproexe/jsonplaceholderdb/data')
+        .then(res => {
+            console.log({res});
+            dispatch({ type: types.LOAD_USERS_SUCCESS, payload: res.data });
+        })
+        .catch(err => {
+            console.log({err});
+            dispatch({ type: types.LOAD_USERS_FAILURE, payload: err.message })
+        })
+}
 
-// DECREMENT COUNTER BY 1
-export const decrementCount = () => ({ type: types.DECREMENT })
+export const createUser = (newUser) => (dispatch) => {
+    dispatch({ type: types.CREATE_USER_STARTED });
 
-// RESET COUNTER
-export const resetCount = () => ({ type: types.RESET })
+    // simulate api call
+    setTimeout(() => {
+        dispatch({ type: types.CREATE_USER_SUCCESS, payload: newUser })
+    }, 1000);
+}
+
+export const updateUser = (user) => (dispatch) => {
+    dispatch({ type: types.UPDATE_USER_STARTED });
+
+    // simulate api call
+    setTimeout(() => {
+        dispatch({ type: types.UPDATE_USER_SUCCESS, payload: user })
+    }, 1000);
+}
+
+export const deleteUser = (id) => (dispatch) => {
+    dispatch({ type: types.DELETE_USER_STARTED })
+    // simulate api call
+    setTimeout(() => {
+        dispatch({ type: types.DELETE_USER_SUCCESS, payload: id })
+    }, 1000);
+}
