@@ -32,17 +32,13 @@ Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&ut
 
 The Redux `Provider` is implemented in `pages/_app.js`. The `MyApp` component is wrapped in a `withReduxStore` function, the redux `store` will be initialized in the function and then passed down to `MyApp` as `this.props.initialReduxState`, which will then be utilized by the `Provider` component.
 
-Every initial server-side request will utilize a new `store`. However, every `Router` or `Link` action will persist the same `store` as a user navigates through the `pages`. To demonstrate this example, we can navigate back and forth to `/show-redux-state` using the provided `Link`s. However, if we navigate directly to `/show-redux-state` (or refresh the page), this will cause a server-side render, which will then utilize a new store.
-
-In the `clock` component, we are going to display a digital clock that updates every second. The first render is happening on the server and then the browser will take over. To illustrate this, the server rendered clock will initially have a black background; then, once the component has been mounted in the browser, it changes from black to a grey background.
-
-In the `counter` component, we are going to display a user-interactive counter that can be increased or decreased when the provided buttons are pressed.
+Every initial server-side request will utilize a new `store`. However, every `Router` or `Link` action will persist the same `store` as a user navigates through the `pages`. 
 
 This example includes two different ways to access the `store` or to `dispatch` actions:
 
 1.) `pages/index.js` will utilize `connect` from `react-redux` to `dispatch` the `startClock` redux action once the component has been mounted in the browser.
 
-2.) `components/counter.js` and `components/examples.js` have access to the redux store using `useSelector` and can dispatch actions using `useDispatch` from `react-redux@^7.1.0`
+2.) `components/*` have access to the redux store using `useSelector` and can dispatch actions using `useDispatch` from `react-redux@^7.1.0`
 
 You can either use the `connect` function to access redux state and/or dispatch actions or use the hook variations: `useSelector` and `useDispatch`. It's up to you.
 
